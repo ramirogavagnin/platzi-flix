@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "platziflix"
 version = "0.1.0"
-description = "Plataforma de cursos online Platziflix"
+description = "Backend de Platziflix: plataforma de cursos online con FastAPI."
 authors = [
     {name = "Platzi Team", email = "team@platzi.com"}
 ]

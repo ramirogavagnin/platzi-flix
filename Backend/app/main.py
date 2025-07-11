@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
+from app.db.base import get_db
 
 
 @asynccontextmanager
@@ -64,6 +67,24 @@ async def health_check():
         "version": settings.VERSION,
         "environment": settings.ENVIRONMENT
     }
+
+
+@app.get("/db-test")
+async def db_test(db: Session = Depends(get_db)):
+    """Test database connection."""
+    try:
+        # Test database connection by executing a simple query
+        result = db.execute(text("SELECT 1 as test")).fetchone()
+        return {
+            "database": "connected",
+            "test_query": result[0],
+            "database_url": settings.DATABASE_URL.split("@")[1] if "@" in settings.DATABASE_URL else "hidden"
+        }
+    except Exception as e:
+        return {
+            "database": "error",
+            "error": str(e)
+        }
 
 
 if __name__ == "__main__":
