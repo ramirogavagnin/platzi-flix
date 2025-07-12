@@ -15,6 +15,9 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Create Base class for declarative models
 Base = declarative_base()
 
+# Note: Models will be imported in alembic/env.py for migration discovery
+# This avoids circular import issues
+
 
 def get_db():
     """

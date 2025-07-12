@@ -15,7 +15,8 @@ ENV UV_PROJECT_ENVIRONMENT="usr/local"
 RUN uv sync --frozen
 
 # Copy application code
-COPY app/ ./app/
+COPY ./app ./app
+COPY ./specs ./specs
 
 # Expose port 8000
 EXPOSE 8000
