@@ -1,4 +1,4 @@
-.PHONY: start stop restart build logs clean help
+.PHONY: start stop restart build logs clean help migrate seed seed-only
 
 # Comando principal para iniciar el entorno de desarrollo
 start:
@@ -24,6 +24,18 @@ logs:
 clean:
 	docker-compose down -v --rmi all --remove-orphans
 
+# Ejecutar migraciones de base de datos
+migrate:
+	docker-compose exec api uv run alembic upgrade head
+
+# Ejecutar seeds de base de datos
+seed:
+	docker-compose exec api uv run python scripts/run_seeds.py
+
+# Ejecutar solo seeds (con script)
+seed-only:
+	docker-compose exec api ./scripts/seed_only.sh
+
 # Mostrar ayuda
 help:
 	@echo "Comandos disponibles:"
@@ -32,6 +44,9 @@ help:
 	@echo "  make restart  - Reiniciar los contenedores"
 	@echo "  make build    - Construir las imágenes"
 	@echo "  make logs     - Ver logs de los contenedores"
+	@echo "  make migrate  - Ejecutar migraciones de base de datos"
+	@echo "  make seed     - Ejecutar seeds de base de datos"
+	@echo "  make seed-only - Ejecutar solo seeds (script)"
 	@echo "  make clean    - Limpiar contenedores y volúmenes"
 	@echo "  make help     - Mostrar esta ayuda"
 

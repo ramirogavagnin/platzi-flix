@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:15
@@ -17,6 +15,23 @@ services:
       timeout: 5s
       retries: 5
 
+  db-init:
+    build: .
+    command: ["./scripts/init_db.sh"]
+    volumes:
+      - ./app:/app/app
+      - ./specs:/app/specs
+      - ./scripts:/app/scripts
+    environment:
+      - DATABASE_URL=postgresql://platziflix_user:platziflix_password@db:5432/platziflix
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - POSTGRES_USER=platziflix_user
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
   api:
     build: .
     ports:
@@ -31,6 +46,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     restart: unless-stopped
 
 volumes:
