@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
 from app.db.base import get_db
-from app.services.course_service import CourseService
+from app.services.course_service import CourseService, get_course_service
 
 
 @asynccontextmanager
@@ -89,10 +89,9 @@ async def db_test(db: Session = Depends(get_db)):
 
 
 @app.get("/courses")
-async def get_courses(db: Session = Depends(get_db)):
+async def get_courses(course_service: CourseService = Depends(get_course_service)):
     """Get all courses."""
     try:
-        course_service = CourseService(db)
         courses = course_service.get_courses()
         return courses
     except Exception as e:
@@ -100,10 +99,9 @@ async def get_courses(db: Session = Depends(get_db)):
 
 
 @app.get("/courses/{slug}")
-async def get_course(slug: str, db: Session = Depends(get_db)):
+async def get_course(slug: str, course_service: CourseService = Depends(get_course_service)):
     """Get a course by slug."""
     try:
-        course_service = CourseService(db)
         course = course_service.get_course_by_slug(slug)
         
         if not course:

@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session, joinedload
 from app.db.models.course import Course
 from app.db.models.lecture import Lecture
 from app.db.models.teacher import Teacher
+from app.db.base import get_db
+from fastapi import Depends
 
 
 class CourseService:
@@ -88,4 +90,9 @@ class CourseService:
             "slug": course.slug,
             "teacher_id": teachers,
             "lectures": lectures
-        } 
+        }
+
+
+def get_course_service(db: Session = Depends(get_db)) -> CourseService:
+    """Dependency to get CourseService instance."""
+    return CourseService(db) 
