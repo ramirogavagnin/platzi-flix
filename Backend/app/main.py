@@ -1,12 +1,13 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
 from app.db.base import get_db
+from app.services.course_service import CourseService
 
 
 @asynccontextmanager
@@ -85,6 +86,34 @@ async def db_test(db: Session = Depends(get_db)):
             "database": "error",
             "error": str(e)
         }
+
+
+@app.get("/courses")
+async def get_courses(db: Session = Depends(get_db)):
+    """Get all courses."""
+    try:
+        course_service = CourseService(db)
+        courses = course_service.get_courses()
+        return courses
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching courses: {str(e)}")
+
+
+@app.get("/courses/{slug}")
+async def get_course(slug: str, db: Session = Depends(get_db)):
+    """Get a course by slug."""
+    try:
+        course_service = CourseService(db)
+        course = course_service.get_course_by_slug(slug)
+        
+        if not course:
+            raise HTTPException(status_code=404, detail="Course not found")
+        
+        return course
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching course: {str(e)}")
 
 
 if __name__ == "__main__":
