@@ -1,0 +1,133 @@
+# React Component Development Guidelines
+
+## Component Structure and Organization
+
+### File Organization
+
+- Components should be organized in feature-based directories under `src/components/`
+- Use PascalCase for component file names: `Course.tsx`, `Header.tsx`
+- Co-locate related components in subdirectories: `ContinueLearningSection/Course.tsx`
+
+### Component Naming and Export
+
+- Use PascalCase for component names: `Course`, `Header`, `Sidebar`
+- Export components as default exports: `export default function Course()`
+- Use descriptive names that reflect the component's purpose
+
+### Props Interface Definition
+
+- Define props interfaces above the component: `interface CourseProps`
+- Use descriptive prop names: `course: CourseResponse`, `index: number`
+- Import types from the centralized types directory: `import { CourseResponse } from '@/types'`
+
+### Component Structure Pattern
+
+```typescript
+import { TypeName } from '@/types';
+import styles from '@/path/to/styles.module.scss';
+
+interface ComponentProps {
+    // Define props here
+}
+
+export default function ComponentName({ prop1, prop2 }: ComponentProps) {
+    return (
+        // JSX structure
+    );
+}
+```
+
+## Styling Guidelines
+
+### CSS Modules Usage
+
+- Import styles from CSS modules: `import styles from '@/app/page.module.scss'`
+- Use camelCase class names in CSS modules: `courseCard`, `cardThumbnail`
+- Apply styles using the imported styles object: `className={styles.courseCard}`
+
+### Class Name Patterns
+
+- Use semantic class names: `cardContent`, `cardTitle`, `cardDescription`
+- Group related styles with prefixes: `cardThumbnail`, `cardContent`
+- Use descriptive modifiers: `iconGreen`, `iconPurple`, `iconBlue`
+
+## Conditional Rendering Patterns
+
+### Index-Based Conditional Rendering
+
+- Use index-based conditions for dynamic content: `{index === 0 && <span>🔷</span>}`
+- Provide fallbacks for different index values
+- Use consistent conditional patterns throughout the component
+
+### Conditional Element Display
+
+- Show/hide elements based on conditions: `{index === 1 && <button>✕</button>}`
+- Use logical AND operator for simple conditional rendering
+- Consider using ternary operators for more complex conditions
+
+## Data Handling
+
+### Props Destructuring
+
+- Destructure props in the function parameters: `{ course, index }`
+- Use TypeScript interfaces for type safety
+- Provide default values when appropriate
+
+### Data Transformation
+
+- Transform data within the component when needed: `course.description.substring(0, 30)`
+- Use conditional logic for data formatting: `course.description.length > 30 ? ... : ...`
+- Keep data transformations simple and readable
+
+## Accessibility and UX
+
+### Image Handling
+
+- Always provide alt text for images: `alt={course.name}`
+- Use descriptive alt text that conveys the image content
+- Consider using Next.js Image component for optimization
+
+### Interactive Elements
+
+- Use semantic HTML elements: `<button>` for interactive elements
+- Provide clear visual indicators for interactive elements: `▶️` for play buttons
+- Ensure proper keyboard navigation support
+
+## Performance Considerations
+
+### Key Props
+
+- Use unique and stable keys for list items: `key={course.id}`
+- Avoid using array indices as keys when possible
+- Use meaningful identifiers from the data
+
+### Conditional Rendering Optimization
+
+- Use conditional rendering to avoid unnecessary DOM elements
+- Consider memoization for expensive computations
+- Keep component logic simple and focused
+
+## Code Quality
+
+### TypeScript Best Practices
+
+- Use strict typing for all props and data
+- Import types from centralized type definitions
+- Avoid using `any` type - use proper interfaces
+
+### Code Organization
+
+- Keep components focused on a single responsibility
+- Extract complex logic into custom hooks when needed
+- Use consistent formatting and naming conventions
+
+### Error Handling
+
+- Provide fallbacks for missing or invalid data
+- Use optional chaining when accessing nested properties
+- Handle edge cases gracefully
+  description:
+  globs:
+  alwaysApply: false
+
+---

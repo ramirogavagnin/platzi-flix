@@ -1,0 +1,248 @@
+# Project Structure Guidelines
+
+## Directory Organization
+
+### Root Level Structure
+
+```
+Frontend/
+├── src/
+│   ├── app/           # Next.js app directory (pages, layouts)
+│   ├── components/    # Reusable UI components
+│   ├── hooks/         # Custom React hooks
+│   ├── styles/        # Global styles and CSS variables
+│   └── types/         # TypeScript type definitions
+├── public/            # Static assets
+├── package.json       # Dependencies and scripts
+└── tsconfig.json      # TypeScript configuration
+```
+
+### Component Organization
+
+- Organize components by feature: `Content/ContinueLearningSection/Course.tsx`
+- Use index files for clean imports: `Content/index.tsx`
+- Co-locate related components in subdirectories
+- Keep component hierarchy logical and intuitive
+
+### File Naming Conventions
+
+- Use PascalCase for component files: `Course.tsx`, `Header.tsx`
+- Use camelCase for utility files: `useGetCourses.ts`
+- Use kebab-case for directories: `ContinueLearningSection/`
+- Use descriptive names that reflect the purpose
+
+## Component Architecture
+
+### Component Categories
+
+- **Layout Components**: `Header.tsx`, `Sidebar.tsx` - Define page structure
+- **Content Components**: `Content/index.tsx` - Main content areas
+- **Feature Components**: `ContinueLearningSection/` - Specific features
+- **UI Components**: `Course.tsx`, `Loader.tsx` - Reusable UI elements
+
+### Component Hierarchy
+
+```
+app/
+├── layout.tsx         # Root layout
+├── page.tsx          # Home page
+└── page.module.scss  # Page-specific styles
+
+components/
+├── Header.tsx        # Top navigation
+├── Sidebar.tsx       # Side navigation
+├── Content/          # Main content area
+│   ├── index.tsx
+│   ├── ContinueLearningSection/
+│   │   ├── index.tsx
+│   │   └── Course.tsx
+│   └── CourseSuggestionsSection.tsx
+├── Loader.tsx        # Loading states
+└── Error.tsx         # Error handling
+```
+
+## Type System Organization
+
+### Type File Structure
+
+```
+types/
+├── index.ts          # Main type exports
+├── course.ts         # Course-related types
+├── lecture.ts        # Lecture-related types
+├── teacher.ts        # Teacher-related types
+├── api.ts           # API response types
+└── common.ts        # Shared/common types
+```
+
+### Type Export Patterns
+
+- Export types from domain-specific files
+- Use barrel exports in `index.ts` for clean imports
+- Avoid circular dependencies between type files
+- Use descriptive type names: `CourseResponse`, `LectureListItem`
+
+## Styling Organization
+
+### Style File Structure
+
+```
+styles/
+├── globals.scss      # Global styles and CSS reset
+├── vars.scss         # CSS custom properties
+└── reset.scss        # CSS reset/normalize
+
+app/
+└── page.module.scss  # Page-specific styles
+
+components/
+└── ComponentName.module.scss  # Component-specific styles
+```
+
+### CSS Module Patterns
+
+- Use CSS modules for component-scoped styling
+- Import styles at the top of component files
+- Use semantic class names in CSS modules
+- Co-locate styles with components when possible
+
+## Import/Export Patterns
+
+### Absolute Imports
+
+- Use `@/` prefix for absolute imports: `import { CourseResponse } from '@/types'`
+- Configure path aliases in `tsconfig.json`
+- Prefer absolute imports over relative imports
+- Use consistent import ordering
+
+### Import Organization
+
+```typescript
+// External dependencies
+import React from "react";
+
+// Internal types
+import { CourseResponse } from "@/types";
+
+// Internal components
+import styles from "@/app/page.module.scss";
+
+// Component definition
+export default function Component() {
+  // Component implementation
+}
+```
+
+### Export Patterns
+
+- Use default exports for components
+- Use named exports for utilities and types
+- Use barrel exports for clean imports
+- Export only what's needed
+
+## Hook Organization
+
+### Custom Hook Structure
+
+```
+hooks/
+├── useGetCourses.ts  # Data fetching hooks
+├── useLocalStorage.ts # Utility hooks
+└── useAuth.ts        # Authentication hooks
+```
+
+### Hook Naming Conventions
+
+- Use `use` prefix for custom hooks: `useGetCourses`
+- Use descriptive names that indicate the hook's purpose
+- Follow React hook naming conventions
+- Keep hooks focused on a single responsibility
+
+## Asset Organization
+
+### Public Assets
+
+```
+public/
+├── images/           # Image assets
+├── icons/            # Icon assets
+├── fonts/            # Font files
+└── favicon.ico       # Site favicon
+```
+
+### Asset Naming
+
+- Use descriptive file names: `course-thumbnail.jpg`
+- Use consistent naming conventions
+- Organize assets by type and purpose
+- Optimize assets for web delivery
+
+## Configuration Files
+
+### TypeScript Configuration
+
+- Use strict TypeScript settings
+- Configure path aliases for clean imports
+- Set up proper module resolution
+- Include all necessary type definitions
+
+### Next.js Configuration
+
+- Configure build optimizations
+- Set up environment variables
+- Configure image optimization
+- Set up proper routing
+
+## Development Workflow
+
+### File Creation Patterns
+
+1. Create component file with proper naming
+2. Define TypeScript interfaces for props
+3. Import necessary types and styles
+4. Implement component logic
+5. Add proper exports
+
+### Component Development Process
+
+1. Define component purpose and requirements
+2. Create TypeScript interfaces
+3. Implement component structure
+4. Add styling with CSS modules
+5. Test component functionality
+6. Document component usage
+
+## Best Practices
+
+### Code Organization
+
+- Keep files focused on a single responsibility
+- Use consistent naming conventions
+- Organize imports logically
+- Maintain clean separation of concerns
+
+### Scalability Considerations
+
+- Plan for component reusability
+- Use proper abstraction levels
+- Consider future feature additions
+- Maintain clean interfaces
+
+### Performance Optimization
+
+- Use proper code splitting
+- Optimize bundle size
+- Implement lazy loading where appropriate
+- Use efficient data fetching patterns
+
+### Maintainability
+
+- Write self-documenting code
+- Use consistent patterns throughout
+- Document complex logic
+- Keep components simple and focused
+  description:
+  globs:
+  alwaysApply: false
+
+---

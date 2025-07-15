@@ -1,0 +1,191 @@
+# TypeScript Development Patterns
+
+## Type Definitions Organization
+
+### Centralized Type Management
+
+- Store all type definitions in `src/types/` directory
+- Use separate files for different domains: `course.ts`, `lecture.ts`, `teacher.ts`
+- Export types from an index file: `src/types/index.ts`
+
+### Interface Naming Conventions
+
+- Use PascalCase for interface names: `CourseResponse`, `CourseProps`
+- Use descriptive names that indicate the purpose: `CourseCreate`, `CourseUpdate`
+- Use `Props` suffix for component prop interfaces: `CourseProps`
+
+### Type Import Patterns
+
+- Import types from centralized location: `import { CourseResponse } from '@/types'`
+- Use absolute imports with `@/` prefix for type imports
+- Avoid relative imports for types when possible
+
+## Component Props Patterns
+
+### Props Interface Definition
+
+```typescript
+interface ComponentProps {
+  // Required props
+  course: CourseResponse;
+  index: number;
+
+  // Optional props
+  onSelect?: (course: CourseResponse) => void;
+  className?: string;
+}
+```
+
+### Props Destructuring with Types
+
+```typescript
+export default function Component({ course, index }: ComponentProps) {
+  // Component implementation
+}
+```
+
+## API Response Types
+
+### Response Interface Pattern
+
+```typescript
+export interface CourseResponse {
+  id: number;
+  name: string;
+  description: string;
+  thumbnail: string;
+  slug: string;
+}
+```
+
+### Extended Response Types
+
+```typescript
+export interface CourseDetail extends CourseResponse {
+  teacher_id: number[];
+  lectures: LectureListItem[];
+}
+```
+
+### Create/Update Types
+
+```typescript
+export interface CourseCreate {
+  name: string;
+  description: string;
+  thumbnail: string;
+  slug: string;
+  teacher_id: number[];
+}
+
+export interface CourseUpdate {
+  name?: string;
+  description?: string;
+  thumbnail?: string;
+  slug?: string;
+  teacher_id?: number[];
+}
+```
+
+## Type Safety Best Practices
+
+### Strict Typing
+
+- Always define types for function parameters and return values
+- Use interfaces for object shapes
+- Avoid using `any` type - use proper interfaces or `unknown`
+
+### Optional Properties
+
+- Use optional properties for non-required fields: `deleted_at?: string | null`
+- Use union types for nullable fields: `string | null`
+- Provide default values when appropriate
+
+### Array Types
+
+- Use specific array types: `teacher_id: number[]`
+- Use generic array types for complex objects: `lectures: LectureListItem[]`
+- Consider using readonly arrays when data shouldn't be mutated
+
+## Type Import/Export Patterns
+
+### Avoiding Circular Dependencies
+
+- Use explicit imports at the bottom of files when needed
+- Structure types to minimize circular dependencies
+- Use barrel exports (index files) to centralize imports
+
+### Type Reusability
+
+- Create base interfaces that can be extended
+- Use generic types for reusable patterns
+- Export types that are used across multiple components
+
+## Error Handling Types
+
+### Nullable Types
+
+- Use union types for nullable values: `string | null`
+- Handle null cases explicitly in components
+- Use optional chaining when accessing potentially null properties
+
+### Error State Types
+
+```typescript
+interface ErrorState {
+  hasError: boolean;
+  message?: string;
+  code?: number;
+}
+```
+
+## Performance and Type Optimization
+
+### Type Narrowing
+
+- Use type guards to narrow types: `typeof value === 'string'`
+- Use conditional types for complex type logic
+- Leverage TypeScript's control flow analysis
+
+### Generic Types
+
+- Use generics for reusable components: `interface ListProps<T>`
+- Define constraints for generic types when needed
+- Use generic types for API response wrappers
+
+## Documentation and Comments
+
+### Type Documentation
+
+- Use JSDoc comments for complex types
+- Document the purpose of each interface
+- Provide examples for complex type usage
+
+### Type Examples
+
+```typescript
+/**
+ * Represents a course in the system
+ * @example
+ * const course: CourseResponse = {
+ *   id: 1,
+ *   name: "React Fundamentals",
+ *   description: "Learn React basics",
+ *   thumbnail: "https://example.com/image.jpg",
+ *   slug: "react-fundamentals"
+ * };
+ */
+export interface CourseResponse {
+  id: number;
+  name: string;
+  description: string;
+  thumbnail: string;
+  slug: string;
+}
+```
+
+description:
+globs:
+alwaysApply: false
+
+---

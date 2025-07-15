@@ -1,0 +1,5 @@
+Mi stack es:
+
+- NextJS 15 con app router
+- css modules con sass
+- Los types están en la carpeta /src/types

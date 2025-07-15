@@ -1,0 +1,273 @@
+# Styling Patterns and Guidelines
+
+## CSS Modules Usage
+
+### Import Pattern
+
+- Import styles from CSS modules: `import styles from '@/app/page.module.scss'`
+- Use absolute imports with `@/` prefix for style imports
+- Import styles at the top of component files
+
+### Class Name Application
+
+- Apply styles using the imported styles object: `className={styles.courseCard}`
+- Use camelCase class names in CSS modules: `courseCard`, `cardThumbnail`
+- Combine multiple classes when needed: `className={`${styles.card} ${styles.active}`}`
+
+## Class Naming Conventions
+
+### Semantic Naming
+
+- Use descriptive, semantic class names: `cardContent`, `cardTitle`, `cardDescription`
+- Avoid generic names like `container`, `wrapper` - be more specific
+- Use BEM-like naming for complex components: `courseCard__thumbnail`, `courseCard__content`
+
+### Component-Specific Prefixes
+
+- Use component prefixes for related styles: `cardThumbnail`, `cardContent`, `cardTitle`
+- Group related styles with consistent prefixes
+- Use descriptive modifiers: `iconGreen`, `iconPurple`, `iconBlue`
+
+### State and Variant Classes
+
+- Use descriptive state classes: `isActive`, `isLoading`, `isDisabled`
+- Use variant classes for different styles: `variantPrimary`, `variantSecondary`
+- Use size modifiers: `sizeSmall`, `sizeMedium`, `sizeLarge`
+
+## Layout and Structure
+
+### Card Layout Pattern
+
+```scss
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cardThumbnail {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.cardContent {
+  padding: 16px;
+  flex: 1;
+}
+```
+
+### Flexbox Usage
+
+- Use flexbox for layout: `display: flex`, `flex-direction: column`
+- Use `flex: 1` for elements that should take remaining space
+- Use `justify-content` and `align-items` for alignment
+
+### Grid Layout
+
+- Use CSS Grid for complex layouts when appropriate
+- Define grid areas for better maintainability
+- Use responsive grid columns: `grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))`
+
+## Responsive Design
+
+### Mobile-First Approach
+
+- Start with mobile styles and add desktop styles with media queries
+- Use relative units: `rem`, `em`, `%`, `vw`, `vh`
+- Avoid fixed pixel values for layout dimensions
+
+### Breakpoint Strategy
+
+```scss
+// Mobile first approach
+.courseCard {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+// Tablet and up
+@media (min-width: 768px) {
+  .courseCard {
+    width: calc(50% - 16px);
+    margin-right: 16px;
+  }
+}
+
+// Desktop and up
+@media (min-width: 1024px) {
+  .courseCard {
+    width: calc(33.333% - 16px);
+  }
+}
+```
+
+## Visual Design Patterns
+
+### Color System
+
+- Use CSS custom properties for consistent colors
+- Define color variables in a central location: `src/styles/vars.scss`
+- Use semantic color names: `--color-primary`, `--color-secondary`, `--color-error`
+
+### Typography
+
+- Use consistent font sizes and line heights
+- Define typography scale in CSS variables
+- Use proper font weights: `font-weight: 400`, `font-weight: 600`, `font-weight: 700`
+
+### Spacing System
+
+- Use consistent spacing values: `8px`, `16px`, `24px`, `32px`
+- Define spacing variables for consistency
+- Use margin and padding consistently
+
+## Interactive Elements
+
+### Button Styles
+
+```scss
+.dismissButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+```
+
+### Hover and Focus States
+
+- Always provide hover and focus states for interactive elements
+- Use consistent transition timing: `transition: all 0.2s ease`
+- Ensure sufficient color contrast for accessibility
+
+### Play Button Pattern
+
+```scss
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: white;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+```
+
+## Image Handling
+
+### Thumbnail Styles
+
+```scss
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.cardThumbnail:hover .thumbnail {
+  transform: scale(1.05);
+}
+```
+
+### Image Optimization
+
+- Use `object-fit: cover` for consistent image display
+- Provide fallback styles for missing images
+- Use lazy loading for better performance
+
+## Animation and Transitions
+
+### Smooth Transitions
+
+- Use consistent transition timing: `transition: all 0.2s ease`
+- Apply transitions to specific properties when possible
+- Use `transform` for performance-optimized animations
+
+### Loading States
+
+- Provide loading states for dynamic content
+- Use skeleton screens for better UX
+- Animate loading indicators appropriately
+
+## Accessibility
+
+### Focus Management
+
+- Ensure all interactive elements are keyboard accessible
+- Use proper focus indicators
+- Maintain logical tab order
+
+### Color and Contrast
+
+- Ensure sufficient color contrast ratios
+- Don't rely solely on color to convey information
+- Test with color blindness simulators
+
+### Screen Reader Support
+
+- Use semantic HTML elements
+- Provide proper alt text for images
+- Use ARIA labels when needed
+
+## Performance Optimization
+
+### CSS Optimization
+
+- Minimize CSS bundle size
+- Use CSS-in-JS sparingly
+- Leverage CSS modules for scoped styling
+
+### Critical CSS
+
+- Inline critical CSS for above-the-fold content
+- Defer non-critical CSS loading
+- Use CSS purging to remove unused styles
+
+## File Organization
+
+### Style File Structure
+
+- Co-locate styles with components when possible
+- Use consistent file naming: `ComponentName.module.scss`
+- Organize global styles in `src/styles/` directory
+
+### Global Styles
+
+- Define global styles in `src/styles/globals.scss`
+- Use CSS reset or normalize
+- Define CSS custom properties for theming
+  description:
+  globs:
+  alwaysApply: false
+
+---
