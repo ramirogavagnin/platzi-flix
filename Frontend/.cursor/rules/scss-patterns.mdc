@@ -1,0 +1,226 @@
+---
+alwaysApply: true
+description: Comprehensive SCSS patterns and best practices for component styling, including naming conventions, layout patterns, responsive design, and common component templates
+---
+
+# SCSS Component Patterns and Best Practices
+
+## File Structure and Organization
+
+### Import Structure
+
+- Always import variables first: `@import "../styles/vars.scss";`
+- Use relative paths for imports
+- Group imports logically (variables, mixins, utilities)
+
+### Component Structure
+
+Follow this order in SCSS files:
+
+1. Imports
+2. Root component class (`.componentName`)
+3. Sub-components (nested or separate classes)
+4. States (hover, focus, active)
+5. Responsive breakpoints
+6. Utility classes
+
+## Naming Conventions
+
+### BEM Methodology
+
+- Use BEM (Block Element Modifier) naming convention
+- Block: `.sidebar`, `.header`, `.courseCard`
+- Element: `.navItem`, `.cardTitle`, `.searchInput`
+- Modifier: `.navItem--active`, `.courseCard--featured`
+
+### Class Naming
+
+- Use camelCase for component classes: `.mainContent`, `.userProfile`
+- Use descriptive names that reflect the component's purpose
+- Avoid generic names like `.container`, `.wrapper` without context
+
+## Color and Variables
+
+### Color Usage
+
+- Always use SCSS variables for colors: `$platzi-dark`, `$platzi-green`
+- Define colors in a centralized variables file
+- Use semantic color names over hex values
+
+### Variable Naming
+
+- Use descriptive variable names: `$platzi-text`, `$platzi-text-secondary`
+- Group related variables with prefixes: `$platzi-*`
+- Use consistent naming patterns across the project
+
+## Layout and Flexbox
+
+### Flexbox Patterns
+
+- Use flexbox for layout: `display: flex`
+- Set `flex-shrink: 0` for fixed-width elements
+- Use `min-width: 0` to prevent flex items from overflowing
+- Set `overflow-x: hidden` to prevent horizontal scroll
+
+### Responsive Design
+
+- Use mobile-first approach
+- Define breakpoints consistently: `@media (max-width: 768px)`
+- Use `flex-direction: column` for mobile layouts
+- Adjust padding and gaps for smaller screens
+
+## Component Styling
+
+### Card Components
+
+- Use consistent border-radius: `12px` for cards, `8px` for inputs
+- Apply hover effects with `transform` and `box-shadow`
+- Use `transition` for smooth animations: `transition: all 0.2s ease`
+- Set `cursor: pointer` for interactive elements
+
+### Form Elements
+
+- Use consistent padding: `12px 16px` for inputs
+- Apply focus states with border color changes
+- Use placeholder styling: `&::placeholder { color: $platzi-text-secondary; }`
+- Group related form elements with consistent spacing
+
+### Interactive Elements
+
+- Always include hover states for clickable elements
+- Use opacity transitions for overlay elements
+- Apply consistent transition durations: `0.2s ease`
+- Use `cursor: pointer` for interactive elements
+
+## Spacing and Typography
+
+### Spacing System
+
+- Use consistent spacing values: `8px`, `12px`, `16px`, `20px`, `24px`, `32px`, `48px`
+- Apply spacing with `gap`, `padding`, and `margin`
+- Use `gap` for flexbox layouts instead of margins
+
+### Typography
+
+- Use system fonts: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`
+- Define consistent font sizes: `12px`, `14px`, `16px`, `18px`, `20px`, `24px`
+- Use font-weight consistently: `400` (normal), `500` (medium), `600` (semibold), `700` (bold)
+- Set line-height for readability: `1.4`
+
+## Animation and Transitions
+
+### Transition Patterns
+
+- Use consistent transition timing: `0.2s ease` for most interactions
+- Use `0.3s ease` for more complex animations (like image scaling)
+- Apply transitions to specific properties when possible
+- Use `transform` for performance-critical animations
+
+### Hover Effects
+
+- Apply subtle transforms: `translateY(-4px)` for cards
+- Use opacity changes for overlay elements
+- Scale images on hover: `transform: scale(1.05)`
+- Change background colors for interactive elements
+
+## Responsive Design
+
+### Breakpoint Strategy
+
+- Mobile: `@media (max-width: 768px)`
+- Tablet: `@media (max-width: 1024px)`
+- Use mobile-first approach
+- Adjust layout direction for mobile: `flex-direction: column`
+
+### Mobile Adaptations
+
+- Reduce padding and gaps on smaller screens
+- Stack elements vertically on mobile
+- Use `overflow-x: auto` for horizontal scrolling
+- Adjust font sizes and spacing for mobile
+
+## Performance and Best Practices
+
+### CSS Properties
+
+- Use `object-fit: cover` for images
+- Apply `overflow: hidden` to contain elements
+- Use `position: relative/absolute` for overlays
+- Set `z-index` values consistently
+
+### Selector Specificity
+
+- Use class selectors over element selectors
+- Avoid deep nesting (max 3 levels)
+- Use `&` for pseudo-classes and pseudo-elements
+- Group related selectors together
+
+### Code Organization
+
+- Group related styles together
+- Use comments to separate sections
+- Keep selectors flat when possible
+- Use consistent indentation (2 spaces)
+
+## Common Patterns
+
+### Search Components
+
+```scss
+.searchBar {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 48px 12px 16px;
+  border-radius: 8px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+```
+
+### Card Components
+
+```scss
+.card {
+  background-color: $platzi-light-gray;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+```
+
+### Button Components
+
+```scss
+.button {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: lighten($base-color, 10%);
+  }
+}
+```
+
+## File References
+
+- Main styles file: [page.module.scss](mdc:src/app/page.module.scss)
+- Variables file: [vars.scss](mdc:src/styles/vars.scss)
+- Global styles: [globals.scss](mdc:src/styles/globals.scss)

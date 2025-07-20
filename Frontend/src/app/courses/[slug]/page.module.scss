@@ -1,0 +1,171 @@
+@import "../../../styles/vars.scss";
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+  padding: 32px;
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: $platzi-text;
+    margin: 0 0 16px 0;
+  }
+
+  p {
+    font-size: 16px;
+    color: $platzi-text-secondary;
+    margin: 0;
+    max-width: 400px;
+  }
+}
+
+.content {
+  display: flex;
+  gap: 32px;
+  padding: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mainContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.description {
+  margin-bottom: 48px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: $platzi-text;
+    margin: 0 0 16px 0;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: $platzi-text-secondary;
+    margin: 0;
+  }
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+}
+
+.courseInfo {
+  background-color: $platzi-light-gray;
+  border-radius: 12px;
+  padding: 24px;
+  position: sticky;
+  top: 32px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: $platzi-text;
+    margin: 0 0 20px 0;
+    border-bottom: 1px solid $platzi-gray;
+    padding-bottom: 12px;
+  }
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: $platzi-text-secondary;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 600;
+  color: $platzi-text;
+}
+
+.teachers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  margin-left: 12px;
+}
+
+.teacher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teacherName {
+  font-size: 14px;
+  font-weight: 500;
+  color: $platzi-text;
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .content {
+    padding: 24px;
+    gap: 24px;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    padding: 16px;
+    gap: 24px;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .courseInfo {
+    position: static;
+  }
+
+  .infoItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .teachers {
+    margin-left: 0;
+  }
+
+  .description {
+    margin-bottom: 32px;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+}
