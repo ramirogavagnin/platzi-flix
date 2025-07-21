@@ -5,9 +5,9 @@ import LessonsList from '@/components/Course/LessonsList';
 import styles from './page.module.scss';
 
 interface CoursePageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 async function getCourseDetails(slug: string): Promise<CourseDetail | null> {
@@ -27,15 +27,27 @@ async function getCourseDetails(slug: string): Promise<CourseDetail | null> {
     }
 }
 
-async function getTeachers(teacherIds: number[]): Promise<Teacher[]> {
+async function getTeachers(teacherIds: (number | { id: number })[]): Promise<Teacher[]> {
     try {
         const teachersPromises = teacherIds.map(async (id) => {
-            const response = await fetch(`http://localhost:8000/teachers/${id}`, {
+            // Handle case where API might return teacher objects instead of IDs
+            let teacherId: number;
+
+            if (typeof id === 'object' && id !== null && 'id' in id) {
+                teacherId = (id as { id: number }).id;
+            } else if (typeof id === 'number') {
+                teacherId = id;
+            } else {
+                console.error('Invalid teacher ID:', id);
+                throw new Error(`Invalid teacher ID: ${JSON.stringify(id)}`);
+            }
+
+            const response = await fetch(`http://localhost:8000/teachers/${teacherId}`, {
                 cache: 'no-store',
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to fetch teacher ${id}`);
+                throw new Error(`Failed to fetch teacher with ID: ${teacherId}`);
             }
 
             return await response.json();
@@ -49,7 +61,8 @@ async function getTeachers(teacherIds: number[]): Promise<Teacher[]> {
 }
 
 export default async function CoursePage({ params }: CoursePageProps) {
-    const course = await getCourseDetails(params.slug);
+    const { slug } = await params;
+    const course = await getCourseDetails(slug);
 
     if (!course) {
         return (
@@ -60,7 +73,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
         );
     }
 
-    const teachers = course.teacher_id ? await getTeachers(course.teacher_id) : [];
+    const teachers = course.teacher_id ? await getTeachers(course.teacher_id as (number | { id: number })[]) : [];
 
     return (
         <>
@@ -106,7 +119,8 @@ export default async function CoursePage({ params }: CoursePageProps) {
 }
 
 export async function generateMetadata({ params }: CoursePageProps) {
-    const course = await getCourseDetails(params.slug);
+    const { slug } = await params;
+    const course = await getCourseDetails(slug);
 
     if (!course) {
         return {

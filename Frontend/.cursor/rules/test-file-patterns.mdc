@@ -1,0 +1,207 @@
+# Test File Patterns
+
+This rule applies to all test files in the project and provides specific patterns and structure guidelines.
+
+## Import Structure
+
+Always follow this import order:
+
+```typescript
+// 1. Vitest imports
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+// 2. Testing Library imports
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+
+// 3. Component/Hook imports
+import ComponentName from "../ComponentName";
+
+// 4. Mock declarations
+vi.mock("@/path/to/styles.module.scss", () => ({
+  default: {
+    // CSS classes
+  },
+}));
+```
+
+## Mock Data Structure
+
+Create mock data at the top of the test file:
+
+```typescript
+const mockData = {
+  id: 1,
+  name: "Test Name",
+  description: "Test description",
+  // Include all required properties
+};
+```
+
+## Test Organization Pattern
+
+Follow this exact structure for all component tests:
+
+```typescript
+describe("ComponentName", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Rendering", () => {
+    it("renders correctly", () => {
+      render(<ComponentName {...props} />);
+      // Basic rendering assertions
+    });
+  });
+
+  describe("User Interactions", () => {
+    it("handles user actions", () => {
+      // Event handling tests
+    });
+  });
+
+  describe("Conditional Rendering", () => {
+    it("renders conditionally based on props", () => {
+      // Conditional rendering tests
+    });
+  });
+
+  describe("Accessibility", () => {
+    it("has proper accessibility attributes", () => {
+      // Accessibility tests
+    });
+  });
+
+  describe("Edge Cases", () => {
+    it("handles edge cases gracefully", () => {
+      // Edge case tests
+    });
+  });
+});
+```
+
+## CSS Module Mocking
+
+Always mock CSS modules with this pattern:
+
+```typescript
+vi.mock("@/app/page.module.scss", () => ({
+  default: {
+    // List all CSS classes used in the component
+    container: "container",
+    header: "header",
+    button: "button",
+    // Add more as needed
+  },
+}));
+```
+
+## Next.js Component Mocking
+
+Use these standard mocks for Next.js components:
+
+```typescript
+// Link component
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    className,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    className: string;
+  }) => (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  ),
+}));
+
+// Image component
+vi.mock("next/image", () => ({
+  __esModule: true,
+  default: function MockImage(props: Record<string, unknown>) {
+    return {
+      type: "img",
+      props: props,
+    };
+  },
+}));
+```
+
+## Assertion Patterns
+
+Use these assertion patterns consistently:
+
+```typescript
+// Element presence
+expect(screen.getByText("Text")).toBeInTheDocument();
+expect(screen.queryByText("Text")).not.toBeInTheDocument();
+
+// Element attributes
+expect(element).toHaveAttribute("href", "/expected-path");
+expect(element).toHaveClass("expected-class");
+
+// Element content
+expect(element).toHaveTextContent("Expected text");
+expect(element).toHaveValue("input value");
+
+// Function calls
+expect(mockFunction).toHaveBeenCalledWith(expectedArgs);
+expect(mockFunction).toHaveBeenCalledTimes(1);
+```
+
+## Query Priority
+
+Always use queries in this priority order:
+
+1. `getByRole` - Most semantic and accessible
+2. `getByLabelText` - For form elements
+3. `getByPlaceholderText` - For inputs
+4. `getByText` - For visible text
+5. `getByTestId` - Last resort
+
+## Async Testing Pattern
+
+Use this pattern for async tests:
+
+```typescript
+it("handles async operations", async () => {
+  render(<ComponentName />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Loaded content")).toBeInTheDocument();
+  });
+});
+```
+
+## Error Handling Pattern
+
+Use this pattern for testing error states:
+
+```typescript
+it("handles errors gracefully", async () => {
+  const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+  render(<ComponentName />);
+
+  // Trigger error condition
+
+  expect(consoleSpy).toHaveBeenCalledWith("Expected error message");
+
+  consoleSpy.mockRestore();
+});
+```
+
+## File References
+
+- Test setup configuration: [src/test/setup.ts](mdc:src/test/setup.ts)
+- Vitest configuration: [vitest.config.ts](mdc:vitest.config.ts)
+- Example component test: [src/components/**tests**/Course.test.tsx](mdc:src/components/__tests__/Course.test.tsx)
+- Example hook test: [src/hooks/**tests**/useGetCourses.test.ts](mdc:src/hooks/__tests__/useGetCourses.test.ts)
+  description:
+  globs:
+  alwaysApply: false
+
+---

@@ -1,0 +1,330 @@
+# Unit Testing Guidelines
+
+This rule provides comprehensive guidance for writing unit tests in this Next.js project using Vitest and React Testing Library. Follow these patterns to ensure consistent, maintainable, and effective tests.
+
+## Test File Structure
+
+### File Naming and Location
+
+- Place test files in `__tests__` folders within the same directory as the component
+- Name test files as `ComponentName.test.tsx` or `ComponentName.test.ts`
+- For hooks, use `useHookName.test.ts`
+- For utilities, use `utilityName.test.ts`
+
+### Basic Test Structure
+
+```typescript
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent } from "@testing-library/react";
+import ComponentName from "../ComponentName";
+
+// Mocks
+vi.mock("@/path/to/styles.module.scss", () => ({
+  default: {
+    // Mock CSS classes
+  },
+}));
+
+describe("ComponentName", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Rendering", () => {
+    it("renders correctly", () => {
+      // Test implementation
+    });
+  });
+});
+```
+
+## Mocking Patterns
+
+### CSS Modules
+
+Always mock CSS modules to avoid build issues:
+
+```typescript
+vi.mock("@/app/page.module.scss", () => ({
+  default: {
+    className1: "className1",
+    className2: "className2",
+    // Add all used classes
+  },
+}));
+```
+
+### Next.js Components
+
+Mock Next.js specific components:
+
+```typescript
+// Link component
+vi.mock("next/link", () => ({
+  default: ({
+    children,
+    href,
+    className,
+  }: {
+    children: React.ReactNode;
+    href: string;
+    className: string;
+  }) => (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  ),
+}));
+
+// Image component
+vi.mock("next/image", () => ({
+  __esModule: true,
+  default: function MockImage(props: Record<string, unknown>) {
+    return {
+      type: "img",
+      props: props,
+    };
+  },
+}));
+```
+
+### External Dependencies
+
+Mock external dependencies like fetch:
+
+```typescript
+global.fetch = vi.fn() as unknown as typeof fetch;
+
+// In tests
+(fetch as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
+  ok: true,
+  json: async () => mockData,
+});
+```
+
+## Test Organization
+
+### Group Tests by Functionality
+
+```typescript
+describe("ComponentName", () => {
+  describe("Rendering", () => {
+    // Basic rendering tests
+  });
+
+  describe("User Interactions", () => {
+    // Event handling tests
+  });
+
+  describe("Conditional Rendering", () => {
+    // Props-based rendering tests
+  });
+
+  describe("Accessibility", () => {
+    // Accessibility tests
+  });
+
+  describe("Edge Cases", () => {
+    // Edge case handling
+  });
+});
+```
+
+### Test Naming Convention
+
+- Use descriptive test names that explain the behavior
+- Follow the pattern: "should [expected behavior] when [condition]"
+- Examples:
+  - `renders course information correctly`
+  - `truncates long description`
+  - `handles dismiss button click`
+  - `does not render dismiss button for other indices`
+
+## Testing Patterns
+
+### Component Rendering Tests
+
+```typescript
+it("renders component information correctly", () => {
+  render(<ComponentName {...props} />);
+
+  expect(screen.getByText("Expected Text")).toBeInTheDocument();
+  expect(screen.getByAltText("Image Alt")).toBeInTheDocument();
+  expect(screen.getByRole("button")).toBeInTheDocument();
+});
+```
+
+### User Interaction Tests
+
+```typescript
+it("handles user interaction", () => {
+  const mockHandler = vi.fn();
+  render(<ComponentName onAction={mockHandler} />);
+
+  const button = screen.getByRole("button");
+  fireEvent.click(button);
+
+  expect(mockHandler).toHaveBeenCalledWith(expectedArgs);
+});
+```
+
+### Conditional Rendering Tests
+
+```typescript
+it("renders element only when condition is met", () => {
+  render(<ComponentName showElement={true} />);
+  expect(screen.getByText("Element")).toBeInTheDocument();
+
+  render(<ComponentName showElement={false} />);
+  expect(screen.queryByText("Element")).not.toBeInTheDocument();
+});
+```
+
+### Async Tests
+
+```typescript
+it("handles async operations", async () => {
+  render(<ComponentName />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Loaded Data")).toBeInTheDocument();
+  });
+});
+```
+
+## Hook Testing
+
+### Custom Hook Tests
+
+```typescript
+import { renderHook, waitFor } from "@testing-library/react";
+
+describe("useCustomHook", () => {
+  it("returns expected values", async () => {
+    const { result } = renderHook(() => useCustomHook());
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(expectedData);
+      expect(result.current.loading).toBe(false);
+      expect(result.current.error).toBe(null);
+    });
+  });
+});
+```
+
+## Accessibility Testing
+
+### Required Accessibility Tests
+
+```typescript
+describe("Accessibility", () => {
+  it("has proper alt text for images", () => {
+    render(<ComponentName />);
+    expect(screen.getByAltText("Descriptive alt text")).toBeInTheDocument();
+  });
+
+  it("has proper ARIA labels", () => {
+    render(<ComponentName />);
+    expect(screen.getByLabelText("Form label")).toBeInTheDocument();
+  });
+
+  it("has proper roles", () => {
+    render(<ComponentName />);
+    expect(screen.getByRole("button")).toBeInTheDocument();
+    expect(screen.getByRole("link")).toBeInTheDocument();
+  });
+});
+```
+
+## Edge Cases
+
+### Common Edge Cases to Test
+
+```typescript
+describe('Edge cases', () => {
+  it('handles empty data', () => {
+    render(<ComponentName data={[]} />)
+    expect(screen.getByText('No data available')).toBeInTheDocument()
+  })
+
+  it('handles null/undefined props', () => {
+    render(<ComponentName optionalProp={null} />)
+    // Test graceful handling
+  })
+
+  it('handles very long text', () => {
+    const longText = 'A'.repeat(1000)
+    render(<ComponentName text={longText} />)
+    // Test truncation or overflow handling
+  })
+
+  it('handles special characters', () => {
+    render(<ComponentName text="Special chars: & < > ' \" 🚀" />)
+    // Test proper rendering
+  })
+})
+```
+
+## Best Practices
+
+### Query Priority
+
+1. **getByRole** - Most accessible and semantic
+2. **getByLabelText** - For form elements
+3. **getByPlaceholderText** - For inputs
+4. **getByText** - For visible text
+5. **getByTestId** - Last resort, only for complex cases
+
+### Avoid Anti-patterns
+
+- Don't test implementation details
+- Don't rely on CSS classes for queries
+- Don't test third-party library functionality
+- Don't test internal state directly
+
+### Test Data Management
+
+```typescript
+// Create reusable mock data
+const mockData = {
+  id: 1,
+  name: "Test Item",
+  description: "Test description",
+};
+
+// Use beforeEach for setup
+beforeEach(() => {
+  vi.clearAllMocks();
+  // Reset any global state
+});
+```
+
+### Error Handling Tests
+
+```typescript
+it("handles errors gracefully", async () => {
+  // Mock error condition
+  vi.spyOn(console, "error").mockImplementation(() => {});
+
+  render(<ComponentName />);
+
+  await waitFor(() => {
+    expect(screen.getByText("Error message")).toBeInTheDocument();
+  });
+
+  console.error.mockRestore();
+});
+```
+
+## File References
+
+- Test setup: [src/test/setup.ts](mdc:src/test/setup.ts)
+- Vitest config: [vitest.config.ts](mdc:vitest.config.ts)
+- Example component test: [src/components/**tests**/Course.test.tsx](mdc:src/components/__tests__/Course.test.tsx)
+- Example hook test: [src/hooks/**tests**/useGetCourses.test.ts](mdc:src/hooks/__tests__/useGetCourses.test.ts)
+- Test documentation: [src/test/README.md](mdc:src/test/README.md)
+  description:
+  globs:
+  alwaysApply: false
+
+---

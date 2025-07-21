@@ -1,0 +1,278 @@
+# Testing Best Practices
+
+This rule provides essential testing guidelines that apply to the entire project. Follow these practices to ensure high-quality, maintainable tests.
+
+## Test Coverage Requirements
+
+### Component Testing
+
+- **All React components must have unit tests**
+- Test both presentational and container components
+- Cover all props variations and conditional rendering
+- Test user interactions and event handlers
+- Include accessibility tests
+
+### Hook Testing
+
+- **All custom hooks must have unit tests**
+- Test all return values and state changes
+- Test error handling and edge cases
+- Mock external dependencies properly
+
+### Utility Testing
+
+- **All utility functions must have unit tests**
+- Test with various input types and edge cases
+- Test error conditions and boundary values
+
+## Test Quality Standards
+
+### Test Naming
+
+- Use descriptive, behavior-focused names
+- Follow the pattern: `[action] when [condition]`
+- Examples:
+  - `renders user profile when user is logged in`
+  - `shows error message when API call fails`
+  - `truncates long text when text exceeds limit`
+
+### Test Structure
+
+- Keep tests focused and atomic
+- One assertion per test when possible
+- Use descriptive test groups with `describe` blocks
+- Arrange-Act-Assert pattern for test structure
+
+### Mocking Guidelines
+
+- Mock external dependencies (APIs, libraries)
+- Mock CSS modules to avoid build issues
+- Mock Next.js components (Link, Image, Router)
+- Use realistic mock data that matches real data structure
+
+## Accessibility Testing
+
+### Required Accessibility Tests
+
+Every component must include these accessibility tests:
+
+```typescript
+describe("Accessibility", () => {
+  it("has proper alt text for images", () => {
+    // Test image accessibility
+  });
+
+  it("has proper ARIA labels", () => {
+    // Test form element accessibility
+  });
+
+  it("has proper semantic HTML structure", () => {
+    // Test heading hierarchy, landmarks, etc.
+  });
+
+  it("supports keyboard navigation", () => {
+    // Test tab order and keyboard interactions
+  });
+});
+```
+
+## Error Handling Testing
+
+### Error State Testing
+
+- Test component behavior when props are invalid
+- Test API error handling
+- Test network failure scenarios
+- Test boundary conditions and edge cases
+
+### Error Boundary Testing
+
+- Test error boundary components
+- Test fallback UI rendering
+- Test error recovery mechanisms
+
+## Performance Testing
+
+### Component Performance
+
+- Test component rendering performance
+- Test re-render optimization
+- Test memory leaks in useEffect hooks
+- Test large data set handling
+
+## Integration Testing
+
+### Component Integration
+
+- Test component interactions
+- Test data flow between components
+- Test context provider usage
+- Test routing behavior
+
+## Test Data Management
+
+### Mock Data Standards
+
+- Create realistic, representative mock data
+- Use consistent data structures across tests
+- Include edge cases in mock data
+- Document mock data purpose and structure
+
+### Test Data Cleanup
+
+- Clean up after each test
+- Reset mocks between tests
+- Clear any global state changes
+- Restore original implementations
+
+## Continuous Integration
+
+### Test Execution
+
+- All tests must pass before merging
+- Run tests in CI/CD pipeline
+- Maintain test coverage thresholds
+- Monitor test execution time
+
+### Test Maintenance
+
+- Update tests when components change
+- Refactor tests for better maintainability
+- Remove obsolete or redundant tests
+- Keep test files organized and clean
+
+## File Organization
+
+### Test File Structure
+
+```
+src/
+├── components/
+│   ├── ComponentName/
+│   │   ├── ComponentName.tsx
+│   │   ├── ComponentName.module.scss
+│   │   └── __tests__/
+│   │       └── ComponentName.test.tsx
+├── hooks/
+│   ├── useHookName.ts
+│   └── __tests__/
+│       └── useHookName.test.ts
+└── utils/
+    ├── utilityName.ts
+    └── __tests__/
+        └── utilityName.test.ts
+```
+
+### Test File Naming
+
+- `ComponentName.test.tsx` for component tests
+- `useHookName.test.ts` for hook tests
+- `utilityName.test.ts` for utility tests
+- `integration.test.ts` for integration tests
+
+## Testing Tools and Configuration
+
+### Required Tools
+
+- **Vitest** - Test runner and framework
+- **React Testing Library** - Component testing utilities
+- **jsdom** - DOM environment for testing
+- **@testing-library/jest-dom** - Custom matchers
+
+### Configuration Files
+
+- [vitest.config.ts](mdc:vitest.config.ts) - Vitest configuration
+- [src/test/setup.ts](mdc:src/test/setup.ts) - Test environment setup
+- [src/test/vitest.d.ts](mdc:src/test/vitest.d.ts) - TypeScript declarations
+
+## Common Testing Patterns
+
+### Component Testing Pattern
+
+```typescript
+describe("ComponentName", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Rendering", () => {
+    // Basic rendering tests
+  });
+
+  describe("User Interactions", () => {
+    // Event handling tests
+  });
+
+  describe("Props Handling", () => {
+    // Props-based behavior tests
+  });
+
+  describe("Accessibility", () => {
+    // Accessibility tests
+  });
+
+  describe("Edge Cases", () => {
+    // Edge case handling
+  });
+});
+```
+
+### Hook Testing Pattern
+
+```typescript
+describe("useHookName", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Initial State", () => {
+    // Initial state tests
+  });
+
+  describe("State Updates", () => {
+    // State change tests
+  });
+
+  describe("Side Effects", () => {
+    // Effect tests
+  });
+
+  describe("Error Handling", () => {
+    // Error state tests
+  });
+});
+```
+
+## Anti-patterns to Avoid
+
+### Testing Anti-patterns
+
+- ❌ Testing implementation details
+- ❌ Testing third-party library functionality
+- ❌ Testing internal state directly
+- ❌ Using CSS classes for element queries
+- ❌ Testing multiple behaviors in one test
+- ❌ Not cleaning up after tests
+- ❌ Using non-descriptive test names
+- ❌ Testing trivial functionality
+
+### Mocking Anti-patterns
+
+- ❌ Over-mocking (mocking everything)
+- ❌ Under-mocking (not mocking external dependencies)
+- ❌ Using unrealistic mock data
+- ❌ Not restoring mocks after tests
+- ❌ Mocking implementation details
+
+## File References
+
+- Test setup: [src/test/setup.ts](mdc:src/test/setup.ts)
+- Vitest config: [vitest.config.ts](mdc:vitest.config.ts)
+- Test types: [src/test/vitest.d.ts](mdc:src/test/vitest.d.ts)
+- Test documentation: [src/test/README.md](mdc:src/test/README.md)
+- Example tests: [src/components/**tests**/](mdc:src/components/__tests__/)
+  description:
+  globs:
+  alwaysApply: false
+
+---
