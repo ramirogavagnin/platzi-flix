@@ -92,6 +92,33 @@ class CourseService:
             "lectures": lectures
         }
 
+    def get_lecture_by_course_slug_and_id(self, course_slug: str, lecture_id: int) -> Optional[Dict[str, Any]]:
+        """
+        Get a specific lecture by course slug and lecture ID.
+        
+        Returns lecture with id, name, description, slug, video_url, created_at, updated_at, deleted_at.
+        """
+        lecture = (
+            self.db.query(Lecture)
+            .join(Course)
+            .filter(Course.slug == course_slug)
+            .filter(Course.deleted_at.is_(None))
+            .filter(Lecture.id == lecture_id)
+            .filter(Lecture.deleted_at.is_(None))
+            .first()
+        )
+        
+        if not lecture:
+            return None
+            
+        return {
+            "id": lecture.id,
+            "name": lecture.name,
+            "description": lecture.description,
+            "slug": lecture.slug,
+            "video_url": lecture.video_url
+        }
+
 
 def get_course_service(db: Session = Depends(get_db)) -> CourseService:
     """Dependency to get CourseService instance."""
