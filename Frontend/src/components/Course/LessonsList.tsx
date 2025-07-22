@@ -1,5 +1,6 @@
 import { LectureListItem } from '@/types/lecture';
 import styles from './LessonsList.module.scss';
+import Link from 'next/link';
 
 interface LessonsListProps {
     lessons: LectureListItem[];
@@ -27,7 +28,7 @@ export default function LessonsList({ lessons, courseSlug }: LessonsListProps) {
 
             <div className={styles.lessonsList}>
                 {lessons.map((lesson, index) => (
-                    <div key={lesson.id} className={styles.lessonItem}>
+                    <Link key={lesson.id} href={`/lectures/${lesson.id}?courseSlug=${courseSlug}`} className={styles.lessonItem}>
                         <div className={styles.lessonNumber}>
                             {String(index + 1).padStart(2, '0')}
                         </div>
@@ -42,7 +43,7 @@ export default function LessonsList({ lessons, courseSlug }: LessonsListProps) {
                                 <span className={styles.playIcon}>▶</span>
                             </button>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </section>
