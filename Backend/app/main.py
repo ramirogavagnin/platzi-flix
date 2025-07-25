@@ -114,11 +114,11 @@ async def get_course(slug: str, course_service: CourseService = Depends(get_cour
         raise HTTPException(status_code=500, detail=f"Error fetching course: {str(e)}")
 
 
-@app.get("/courses/{slug}/lectures/{lecture_id}")
-async def get_lecture(slug: str, lecture_id: int, course_service: CourseService = Depends(get_course_service)):
-    """Get a specific lecture by course slug and lecture ID."""
+@app.get("/lectures/{lecture_id}")
+async def get_lecture(lecture_id: int, course_service: CourseService = Depends(get_course_service)):
+    """Get a specific lecture by lecture ID."""
     try:
-        lecture = course_service.get_lecture_by_course_slug_and_id(slug, lecture_id)
+        lecture = course_service.get_lecture_by_id(lecture_id)
         
         if not lecture:
             raise HTTPException(status_code=404, detail="Lecture not found")

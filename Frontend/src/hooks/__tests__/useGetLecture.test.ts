@@ -25,7 +25,7 @@ describe("useGetLecture", () => {
       json: async () => mockLecture,
     });
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.lecture).toEqual(mockLecture);
@@ -33,9 +33,7 @@ describe("useGetLecture", () => {
       expect(result.current.error).toBe(null);
     });
 
-    expect(fetch).toHaveBeenCalledWith(
-      "http://localhost:8000/courses/curso-de-python/lectures/40"
-    );
+    expect(fetch).toHaveBeenCalledWith("http://localhost:8000/lectures/40");
   });
 
   it("should handle fetch error", async () => {
@@ -44,7 +42,7 @@ describe("useGetLecture", () => {
       new Error("Network error")
     );
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("Network error");
@@ -61,9 +59,7 @@ describe("useGetLecture", () => {
       statusText: "Not Found",
     });
 
-    const { result } = renderHook(() =>
-      useGetLecture("curso-de-python", "999")
-    );
+    const { result } = renderHook(() => useGetLecture("999"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("HTTP error! status: 404");
@@ -84,7 +80,7 @@ describe("useGetLecture", () => {
       json: async () => mockLectureWithoutId,
     });
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("Error al obtener la clase");
@@ -93,17 +89,8 @@ describe("useGetLecture", () => {
     });
   });
 
-  it("should not fetch when courseSlug is empty", () => {
-    const { result } = renderHook(() => useGetLecture("", "40"));
-
-    expect(result.current.loading).toBe(true);
-    expect(result.current.lecture).toBe(null);
-    expect(result.current.error).toBe(null);
-    expect(fetch).not.toHaveBeenCalled();
-  });
-
   it("should not fetch when lectureId is empty", () => {
-    const { result } = renderHook(() => useGetLecture("curso-de-python", ""));
+    const { result } = renderHook(() => useGetLecture(""));
 
     expect(result.current.loading).toBe(true);
     expect(result.current.lecture).toBe(null);
@@ -111,7 +98,7 @@ describe("useGetLecture", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  it("should refetch when courseSlug or lectureId changes", async () => {
+  it("should refetch when lectureId changes", async () => {
     const mockLecture1 = {
       id: 40,
       name: "Lecture 1",
@@ -135,9 +122,9 @@ describe("useGetLecture", () => {
     });
 
     const { result, rerender } = renderHook(
-      ({ courseSlug, lectureId }) => useGetLecture(courseSlug, lectureId),
+      ({ lectureId }) => useGetLecture(lectureId),
       {
-        initialProps: { courseSlug: "curso-de-python", lectureId: "40" },
+        initialProps: { lectureId: "40" },
       }
     );
 
@@ -152,7 +139,7 @@ describe("useGetLecture", () => {
     });
 
     // Change lectureId
-    rerender({ courseSlug: "curso-de-python", lectureId: "41" });
+    rerender({ lectureId: "41" });
 
     await waitFor(() => {
       expect(result.current.lecture).toEqual(mockLecture2);
@@ -161,11 +148,11 @@ describe("useGetLecture", () => {
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(fetch).toHaveBeenNthCalledWith(
       1,
-      "http://localhost:8000/courses/curso-de-python/lectures/40"
+      "http://localhost:8000/lectures/40"
     );
     expect(fetch).toHaveBeenNthCalledWith(
       2,
-      "http://localhost:8000/courses/curso-de-python/lectures/41"
+      "http://localhost:8000/lectures/41"
     );
   });
 
@@ -175,7 +162,7 @@ describe("useGetLecture", () => {
       "Unknown string error"
     );
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("Error desconocido");
@@ -190,7 +177,7 @@ describe("useGetLecture", () => {
       () => new Promise(() => {})
     );
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     expect(result.current.loading).toBe(true);
     expect(result.current.lecture).toBe(null);
@@ -205,7 +192,7 @@ describe("useGetLecture", () => {
       statusText: "Internal Server Error",
     });
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("HTTP error! status: 500");
@@ -223,7 +210,7 @@ describe("useGetLecture", () => {
       },
     });
 
-    const { result } = renderHook(() => useGetLecture("curso-de-python", "40"));
+    const { result } = renderHook(() => useGetLecture("40"));
 
     await waitFor(() => {
       expect(result.current.error).toBe("Invalid JSON");

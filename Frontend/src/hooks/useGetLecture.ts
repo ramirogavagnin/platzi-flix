@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { LectureResponse } from "@/types";
 
-export const useGetLecture = (courseSlug: string, lectureId: string) => {
+export const useGetLecture = (lectureId: string) => {
   const [lecture, setLecture] = useState<LectureResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -11,7 +11,7 @@ export const useGetLecture = (courseSlug: string, lectureId: string) => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:8000/courses/${courseSlug}/lectures/${lectureId}`
+          `http://localhost:8000/lectures/${lectureId}`
         );
 
         if (!response.ok) {
@@ -32,10 +32,10 @@ export const useGetLecture = (courseSlug: string, lectureId: string) => {
       }
     };
 
-    if (courseSlug && lectureId) {
+    if (lectureId) {
       fetchLecture();
     }
-  }, [courseSlug, lectureId]);
+  }, [lectureId]);
 
   return { lecture, loading, error };
 };

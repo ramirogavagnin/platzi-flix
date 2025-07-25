@@ -4,10 +4,9 @@ import Link from 'next/link';
 
 interface LessonsListProps {
     lessons: LectureListItem[];
-    courseSlug: string;
 }
 
-export default function LessonsList({ lessons, courseSlug }: LessonsListProps) {
+export default function LessonsList({ lessons }: LessonsListProps) {
     if (lessons.length === 0) {
         return (
             <section className={styles.container}>
@@ -28,7 +27,7 @@ export default function LessonsList({ lessons, courseSlug }: LessonsListProps) {
 
             <div className={styles.lessonsList}>
                 {lessons.map((lesson, index) => (
-                    <Link key={lesson.id} href={`/lectures/${lesson.id}?courseSlug=${courseSlug}`} className={styles.lessonItem}>
+                    <Link key={lesson.id} href={`/lectures/${lesson.id}`} className={styles.lessonItem}>
                         <div className={styles.lessonNumber}>
                             {String(index + 1).padStart(2, '0')}
                         </div>

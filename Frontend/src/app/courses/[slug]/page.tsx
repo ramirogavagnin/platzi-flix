@@ -89,7 +89,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                         <p>{course.description}</p>
                     </section>
 
-                    <LessonsList lessons={course.lectures} courseSlug={course.slug} />
+                    <LessonsList lessons={course.lectures} />
                 </div>
 
                 <aside className={styles.sidebar}>

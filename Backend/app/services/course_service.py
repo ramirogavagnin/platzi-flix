@@ -92,17 +92,14 @@ class CourseService:
             "lectures": lectures
         }
 
-    def get_lecture_by_course_slug_and_id(self, course_slug: str, lecture_id: int) -> Optional[Dict[str, Any]]:
+    def get_lecture_by_id(self, lecture_id: int) -> Optional[Dict[str, Any]]:
         """
-        Get a specific lecture by course slug and lecture ID.
+        Get a specific lecture by its ID.
         
-        Returns lecture with id, name, description, slug, video_url, created_at, updated_at, deleted_at.
+        Returns lecture with id, name, description, slug, video_url.
         """
         lecture = (
             self.db.query(Lecture)
-            .join(Course)
-            .filter(Course.slug == course_slug)
-            .filter(Course.deleted_at.is_(None))
             .filter(Lecture.id == lecture_id)
             .filter(Lecture.deleted_at.is_(None))
             .first()

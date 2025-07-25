@@ -15,17 +15,13 @@ interface LecturePageProps {
 
 export default function LecturePage({ params }: LecturePageProps) {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const { lectureId } = params;
 
-    // Get course slug from URL parameters - required for API call
-    const courseSlug = searchParams.get('courseSlug') || '';
+    const { lecture, loading, error } = useGetLecture(lectureId);
 
-    const { lecture, loading, error } = useGetLecture(courseSlug, lectureId);
+    const handleBackToCourse = () =>
+        router.back();
 
-    const handleBackToCourse = () => {
-        router.push(`/courses/${courseSlug}`);
-    };
 
     if (loading) {
         return (
