@@ -21,10 +21,11 @@ CourseLister/
 │   ├── Models/
 │   │   └── Course.swift
 │   └── Repositories/
-│       └── CourseRepository.swift (protocolo)
+│       └── CourseRepositoryProtocol.swift (protocolo)
 │
 ├── Presentation/
 │   ├── ViewModels/
 │   │   └── CourseListViewModel.swift
 │   └── Views/
 │       └── CourseListView.swift
+```

@@ -13,6 +13,7 @@ class CourseListViewModel: ObservableObject {
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
+    private let courseRepository: CourseRepositoryProtocol
     
     // MARK: - Computed Properties
     var filteredCourses: [Course] {
@@ -31,24 +32,34 @@ class CourseListViewModel: ObservableObject {
     }
     
     // MARK: - Initializer
-    init() {
-        loadCourses()
-    }
-    
-    // MARK: - Public Methods
-    func loadCourses() {
-        isLoading = true
-        errorMessage = nil
-        
-        // Simulate API call with delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.courses = Course.sampleCourses
-            self.isLoading = false
+    /// Initializes the ViewModel with a course repository
+    /// - Parameter courseRepository: The repository to use for fetching courses. Defaults to RemoteCourseRepository
+    init(courseRepository: CourseRepositoryProtocol = RemoteCourseRepository()) {
+        self.courseRepository = courseRepository
+        Task {
+            await loadCourses()
         }
     }
     
+    // MARK: - Public Methods
+    func loadCourses() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            let fetchedCourses = try await courseRepository.getCourses()
+            courses = fetchedCourses
+        } catch {
+            handleError(error)
+        }
+        
+        isLoading = false
+    }
+    
     func refreshCourses() {
-        loadCourses()
+        Task {
+            await loadCourses()
+        }
     }
     
     func clearError() {
@@ -59,12 +70,62 @@ class CourseListViewModel: ObservableObject {
         // TODO: Handle course selection navigation
         print("Selected course: \(course.name)")
     }
+    
+    /// Fetches detailed information for a specific course
+    /// - Parameter slug: The course slug
+    /// - Returns: Course with detailed information including lectures
+    func getCourseDetails(slug: String) async -> Course? {
+        do {
+            return try await courseRepository.getCourse(by: slug)
+        } catch {
+            handleError(error)
+            return nil
+        }
+    }
 }
 
 // MARK: - Error Handling
 extension CourseListViewModel {
     private func handleError(_ error: Error) {
-        errorMessage = error.localizedDescription
-        isLoading = false
+        if let httpError = error as? HTTPError {
+            errorMessage = httpError.localizedDescription
+        } else {
+            errorMessage = error.localizedDescription
+        }
+        print("❌ CourseListViewModel Error: \(error)")
+    }
+}
+
+// MARK: - HTTPError LocalizedDescription
+extension HTTPError {
+    var localizedDescription: String {
+        switch self {
+        case .noInternetConnection:
+            return "No hay conexión a internet. Verifica tu conexión y vuelve a intentar."
+        case .timeout:
+            return "La solicitud ha tardado demasiado. Vuelve a intentar."
+        case .invalidURL:
+            return "URL inválida."
+        case .unauthorized:
+            return "No autorizado. Verifica tus credenciales."
+        case .forbidden:
+            return "Acceso prohibido."
+        case .notFound:
+            return "Recurso no encontrado."
+        case .clientError(let statusCode, let message):
+            return "Error del cliente (\(statusCode)): \(message)"
+        case .serverError(let statusCode, let message):
+            return "Error del servidor (\(statusCode)): \(message)"
+        case .decodingError(let message):
+            return "Error al procesar los datos: \(message)"
+        case .networkError(let message):
+            return "Error de red: \(message)"
+        case .unknown(let message):
+            return "Error desconocido: \(message)"
+        case .noData:
+            return "No se encontraron datos."
+        case .encodingError(_):
+            return "Error al codificar los datos."
+        }
     }
 } 

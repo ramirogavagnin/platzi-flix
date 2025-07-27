@@ -11,6 +11,7 @@ struct Course: Identifiable, Codable, Equatable {
     let updatedAt: String?
     let deletedAt: String?
     let teacherIds: [Int]?
+    let lectures: [Lecture]? // Classes/Lectures associated with the course
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -22,10 +23,22 @@ struct Course: Identifiable, Codable, Equatable {
         case updatedAt = "updated_at"
         case deletedAt = "deleted_at"
         case teacherIds = "teacher_id"
+        case lectures = "classes"
     }
     
     // MARK: - Initializers
-    init(id: Int, name: String, description: String, thumbnail: String, slug: String, createdAt: String? = nil, updatedAt: String? = nil, deletedAt: String? = nil, teacherIds: [Int]? = nil) {
+    init(
+        id: Int,
+        name: String,
+        description: String,
+        thumbnail: String,
+        slug: String,
+        createdAt: String? = nil,
+        updatedAt: String? = nil,
+        deletedAt: String? = nil,
+        teacherIds: [Int]? = nil,
+        lectures: [Lecture]? = nil
+    ) {
         self.id = id
         self.name = name
         self.description = description
@@ -35,6 +48,91 @@ struct Course: Identifiable, Codable, Equatable {
         self.updatedAt = updatedAt
         self.deletedAt = deletedAt
         self.teacherIds = teacherIds
+        self.lectures = lectures
+    }
+}
+
+// MARK: - Lecture Model
+struct Lecture: Identifiable, Codable, Equatable {
+    let id: Int
+    let courseId: Int?
+    let name: String
+    let description: String
+    let slug: String
+    let videoUrl: String?
+    let createdAt: String?
+    let updatedAt: String?
+    let deletedAt: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case courseId = "course_id"
+        case name
+        case description
+        case slug
+        case videoUrl = "video_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
+    }
+    
+    // MARK: - Initializers
+    init(
+        id: Int,
+        courseId: Int? = nil,
+        name: String,
+        description: String,
+        slug: String,
+        videoUrl: String? = nil,
+        createdAt: String? = nil,
+        updatedAt: String? = nil,
+        deletedAt: String? = nil
+    ) {
+        self.id = id
+        self.courseId = courseId
+        self.name = name
+        self.description = description
+        self.slug = slug
+        self.videoUrl = videoUrl
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deletedAt = deletedAt
+    }
+}
+
+// MARK: - Teacher Model
+struct Teacher: Identifiable, Codable, Equatable {
+    let id: Int
+    let name: String
+    let email: String
+    let createdAt: String?
+    let updatedAt: String?
+    let deletedAt: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case email
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case deletedAt = "deleted_at"
+    }
+    
+    // MARK: - Initializers
+    init(
+        id: Int,
+        name: String,
+        email: String,
+        createdAt: String? = nil,
+        updatedAt: String? = nil,
+        deletedAt: String? = nil
+    ) {
+        self.id = id
+        self.name = name
+        self.email = email
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+        self.deletedAt = deletedAt
     }
 }
 
