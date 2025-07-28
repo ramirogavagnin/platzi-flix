@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PlatziFlix Android</string>
     <string name="latest_courses_title">Últimos cursos lanzados</string>
+    <string name="course_detail_title">Detalle del curso</string>
+    <string name="lectures_title">Clases del curso</string>
     <string name="error_loading_courses">Error al cargar los cursos</string>
     <string name="no_courses_available">No hay cursos disponibles</string>
     <string name="retry">Reintentar</string>

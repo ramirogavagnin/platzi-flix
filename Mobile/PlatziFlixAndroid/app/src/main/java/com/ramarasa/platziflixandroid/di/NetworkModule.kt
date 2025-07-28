@@ -2,7 +2,9 @@ package com.ramarasa.platziflixandroid.di
 
 import com.ramarasa.platziflixandroid.data.api.CourseApiService
 import com.ramarasa.platziflixandroid.data.repositories.RemoteCourseRepository
+import com.ramarasa.platziflixandroid.data.repositories.RemoteCourseDetailRepository
 import com.ramarasa.platziflixandroid.domain.repositories.CourseRepository
+import com.ramarasa.platziflixandroid.domain.repositories.CourseDetailRepository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,4 +38,6 @@ object NetworkModule {
     val courseApiService: CourseApiService = retrofit.create(CourseApiService::class.java)
     
     val courseRepository: CourseRepository = RemoteCourseRepository(courseApiService)
+    
+    val courseDetailRepository: CourseDetailRepository = RemoteCourseDetailRepository(courseApiService)
 } 
