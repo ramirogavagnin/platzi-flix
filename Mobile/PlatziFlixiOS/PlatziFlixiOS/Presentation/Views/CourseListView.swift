@@ -6,6 +6,8 @@ struct CourseListView: View {
     // MARK: - State
     @StateObject private var viewModel = CourseListViewModel()
     @State private var showingSearchBar = false
+    @State private var selectedCourseSlug: String?
+    @State private var showingCourseDetail = false
     
     // MARK: - Body
     var body: some View {
@@ -41,6 +43,11 @@ struct CourseListView: View {
             .refreshable {
                 await refreshCourses()
             }
+            .sheet(isPresented: $showingCourseDetail) {
+                if let courseSlug = selectedCourseSlug {
+                    CourseDetailView(courseSlug: courseSlug)
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
@@ -51,7 +58,8 @@ struct CourseListView: View {
             LazyVStack(spacing: DesignSystem.Spacing.listItemSpacing) {
                 ForEach(viewModel.filteredCourses) { course in
                     CourseCardView(course: course) {
-                        viewModel.selectCourse(course)
+                        selectedCourseSlug = course.slug
+                        showingCourseDetail = true
                     }
                     .padding(.horizontal, DesignSystem.Spacing.screenPadding)
                 }

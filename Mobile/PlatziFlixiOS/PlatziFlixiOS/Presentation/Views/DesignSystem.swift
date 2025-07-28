@@ -11,6 +11,9 @@ struct DesignSystem {
         static let primaryGreen = Color(hex: "#34C759")
         static let primaryRed = Color(hex: "#FF3B30")
         
+        // MARK: - Accent Colors
+        static let accentBlue = primaryBlue // Alias for consistency
+        
         // MARK: - Neutral Colors
         static let neutralBlack = Color(hex: "#000000")
         static let neutralGray900 = Color(hex: "#1C1C1E")
@@ -51,6 +54,7 @@ struct DesignSystem {
         static let title1 = Font.title.weight(.semibold)
         static let title2 = Font.title2.weight(.semibold)
         static let title3 = Font.title3.weight(.medium)
+        static let headline = Font.headline.weight(.semibold)
         
         // MARK: - Body Text
         static let body = Font.body.weight(.regular)
@@ -105,6 +109,21 @@ struct DesignSystem {
         static let card: CGFloat = large // 12pt
         static let button: CGFloat = medium // 8pt
         static let textField: CGFloat = medium // 8pt
+    }
+    
+    // MARK: - Corner Radius (Alias for backward compatibility)
+    struct CornerRadius {
+        static let small: CGFloat = Radius.small
+        static let medium: CGFloat = Radius.medium
+        static let large: CGFloat = Radius.large
+        static let xLarge: CGFloat = Radius.xLarge
+        static let xxLarge: CGFloat = Radius.xxLarge
+        static let full: CGFloat = Radius.full
+        
+        // MARK: - Component Specific
+        static let card: CGFloat = Radius.card
+        static let button: CGFloat = Radius.button
+        static let textField: CGFloat = Radius.textField
     }
     
     // MARK: - Shadows
@@ -172,38 +191,39 @@ extension Color {
     }
 }
 
-// MARK: - Custom Button Styles
+// MARK: - Button Styles
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(DesignSystem.Typography.buttonLarge)
-            .foregroundColor(DesignSystem.Colors.neutralWhite)
-            .frame(maxWidth: .infinity)
-            .frame(height: DesignSystem.Size.buttonHeight)
-            .background(DesignSystem.Colors.primaryBlue)
-            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
+            .font(DesignSystem.Typography.headline)
+            .foregroundColor(.white)
+            .padding(.horizontal, DesignSystem.Spacing.spacing6)
+            .padding(.vertical, DesignSystem.Spacing.spacing4)
+            .background(
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium)
+                    .fill(DesignSystem.Colors.accentBlue)
+                    .opacity(configuration.isPressed ? 0.8 : 1.0)
+            )
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(DesignSystem.Animation.buttonPress, value: configuration.isPressed)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(DesignSystem.Typography.buttonMedium)
-            .foregroundColor(DesignSystem.Colors.primaryText)
-            .frame(maxWidth: .infinity)
-            .frame(height: DesignSystem.Size.buttonHeight)
-            .background(DesignSystem.Colors.secondaryBackground)
-            .overlay(
-                RoundedRectangle(cornerRadius: DesignSystem.Radius.button)
-                    .stroke(DesignSystem.Colors.separator, lineWidth: 1)
+            .font(DesignSystem.Typography.headline)
+            .foregroundColor(DesignSystem.Colors.accentBlue)
+            .padding(.horizontal, DesignSystem.Spacing.spacing6)
+            .padding(.vertical, DesignSystem.Spacing.spacing4)
+            .background(
+                RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.medium)
+                    .strokeBorder(DesignSystem.Colors.accentBlue, lineWidth: 1)
+                    .background(Color.clear)
+                    .opacity(configuration.isPressed ? 0.8 : 1.0)
             )
-            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
             .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .animation(DesignSystem.Animation.buttonPress, value: configuration.isPressed)
+            .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 

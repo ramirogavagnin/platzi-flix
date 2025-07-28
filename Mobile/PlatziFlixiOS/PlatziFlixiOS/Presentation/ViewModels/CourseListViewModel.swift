@@ -94,38 +94,4 @@ extension CourseListViewModel {
         }
         print("❌ CourseListViewModel Error: \(error)")
     }
-}
-
-// MARK: - HTTPError LocalizedDescription
-extension HTTPError {
-    var localizedDescription: String {
-        switch self {
-        case .noInternetConnection:
-            return "No hay conexión a internet. Verifica tu conexión y vuelve a intentar."
-        case .timeout:
-            return "La solicitud ha tardado demasiado. Vuelve a intentar."
-        case .invalidURL:
-            return "URL inválida."
-        case .unauthorized:
-            return "No autorizado. Verifica tus credenciales."
-        case .forbidden:
-            return "Acceso prohibido."
-        case .notFound:
-            return "Recurso no encontrado."
-        case .clientError(let statusCode, let message):
-            return "Error del cliente (\(statusCode)): \(message)"
-        case .serverError(let statusCode, let message):
-            return "Error del servidor (\(statusCode)): \(message)"
-        case .decodingError(let message):
-            return "Error al procesar los datos: \(message)"
-        case .networkError(let message):
-            return "Error de red: \(message)"
-        case .unknown(let message):
-            return "Error desconocido: \(message)"
-        case .noData:
-            return "No se encontraron datos."
-        case .encodingError(_):
-            return "Error al codificar los datos."
-        }
-    }
 } 
